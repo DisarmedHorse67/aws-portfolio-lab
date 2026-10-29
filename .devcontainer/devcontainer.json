@@ -1,0 +1,40 @@
+{
+  "name": "AWS-Portfolio-Lab",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/terraform:1": {
+	"version": "latest",
+	"tflint": "none",
+	"terragrunt": "none"
+	},
+    "ghcr.io/devcontainers/features/aws-cli:1": {},
+    "ghcr.io/devcontainers/features/hugo:1":{
+	"version": "latest",
+	"extended": true
+    }
+  },
+
+  // Instalación de herramientas adicionales (Hugo, Gitleaks, Pre-commit)
+  "postCreateCommand": "sudo apt-get update && sudo apt-get install -y gitleaks pre-commit",
+
+  // Configuración personalizada dentro del contenedor
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "hashicorp.terraform",
+        "golang.go",
+        "ms-azuretools.vscode-docker"
+      ]
+    }
+  },
+
+  // Mantiene tus credenciales o configuraciones locales mapeadas si lo deseas
+  "mounts": [
+    "source=${localEnv:HOME}/.aws,target=/home/vscode/.aws,type=bind,consistency=cached"
+  ],
+
+  // Usuario con el que correrá el contenedor
+  "remoteUser": "vscode"
+}
