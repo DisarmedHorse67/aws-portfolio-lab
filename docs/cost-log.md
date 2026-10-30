@@ -1,6 +1,0 @@
-# ADR-001: <decision>
-Status: proposed | accepted | superseded
-Context: what forced the choice
-Options: A, B, C with one line each
-Decision: what you chose and why
-Consequences: cost, risk, what becomes harder
