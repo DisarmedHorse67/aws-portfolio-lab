@@ -2,4 +2,6 @@
 *.tfstate
 *.tfstate.*
 *.tfvars
-.env
+*.tfplan
+crash.log
+*.env
