@@ -1,8 +1,8 @@
+#Create some local variables for the CloudTrail trail name and ARN.
 locals {
   trail_name = "dcc-portfolio-trail"
   trail_arn  = "arn:aws:cloudtrail:us-east-1:${var.management_account_id}:trail/${local.trail_name}"
 }
-
 #Block public access for all S3 buckets in every account.
 resource "aws_s3_account_public_access_block" "workload" {
   provider                = aws.workload
@@ -11,7 +11,6 @@ resource "aws_s3_account_public_access_block" "workload" {
   ignore_public_acls      = true
   restrict_public_buckets = true
 }
-
 
 resource "aws_s3_account_public_access_block" "management" {
   provider                = aws.management
@@ -28,7 +27,6 @@ resource "aws_s3_account_public_access_block" "logs" {
   ignore_public_acls      = true
   restrict_public_buckets = true
 }
-
 #Create S3 bucket for log archive in logs account.
 resource "aws_s3_bucket" "log_archive_bucket" {
   provider = aws.logs
@@ -161,4 +159,18 @@ resource "aws_s3_bucket_lifecycle_configuration" "log_archive_bucket" {
       expired_object_delete_marker = true
     }
   }
+}
+#Creates an organization trail in CloudTrail that logs all events in the organization and sends them to the log archive bucket.
+resource "aws_cloudtrail" "organization_trail" {
+  provider                      = aws.management
+  name                          = "dcc-portfolio-trail"
+  s3_bucket_name                = "dcc-logs-s3-log-archive-portfolio-041026" 
+  is_organization_trail         = true
+  include_global_service_events = true
+  enable_log_file_validation    = true
+  is_multi_region_trail         = true
+
+  depends_on = [
+    aws_s3_bucket_policy.log_archive_bucket_policy
+  ]
 }
