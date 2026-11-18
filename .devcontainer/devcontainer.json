@@ -16,10 +16,10 @@
     }
   },
 
-  // Instalación de herramientas adicionales (Hugo, Gitleaks, Pre-commit)
+  // Additional tools to install after the container is created
   "postCreateCommand": "sudo apt-get update && sudo apt-get install -y gitleaks pre-commit",
 
-  // Configuración personalizada dentro del contenedor
+  // Personalized VS Code settings and extensions
   "customizations": {
     "vscode": {
       "extensions": [
@@ -30,11 +30,11 @@
     }
   },
 
-  // Mantiene tus credenciales o configuraciones locales mapeadas si lo deseas
+  // Maintain a persistent AWS credentials folder in the container
   "mounts": [
     "source=${localEnv:HOME}/.aws,target=/home/vscode/.aws,type=bind,consistency=cached"
   ],
 
-  // Usuario con el que correrá el contenedor
+  // Container user 
   "remoteUser": "vscode"
 }
