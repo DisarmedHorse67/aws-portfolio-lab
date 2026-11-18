@@ -4,13 +4,6 @@ locals {
   trail_arn  = "arn:aws:cloudtrail:us-east-1:${var.management_account_id}:trail/${local.trail_name}"
 }
 #Block public access for all S3 buckets in every account.
-resource "aws_s3_account_public_access_block" "workload" {
-  provider                = aws.workload
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
-}
 
 resource "aws_s3_account_public_access_block" "management" {
   provider                = aws.management
