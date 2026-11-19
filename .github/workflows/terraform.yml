@@ -58,27 +58,6 @@ jobs:
         with:
           terraform_version: ${{ env.TF_VERSION }}
       - run: terraform fmt -check -recursive
-      ##
-      - name: Check role ARN shape (temporary)
-        env:
-          ROLE: ${{ secrets.AWS_PLAN_ROLE_ARN }}
-        run: |
-          echo "length: ${#ROLE}"
-          echo "digits hidden: $(echo "$ROLE" | tr -d '\r' | sed -E 's/[0-9]/N/g')"
-          if [[ "$ROLE" =~ ^arn:aws:iam::[0-9]{12}:role/[A-Za-z0-9+=,.@_-]+$ ]]; then
-            echo "format: ok"
-          else
-            echo "format: BAD"
-          fi
-
-      - name: Inspect OIDC token sub (temporary)
-        run: |
-          RESP=$(curl -sS -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=sts.amazonaws.com")
-          JWT=$(echo "$RESP" | node -e "const d=JSON.parse(require('fs').readFileSync(0,'utf8')); console.log(d.value)")
-          PAYLOAD=$(echo "$JWT" | cut -d. -f2 | tr '_-' '/+' | awk '{l=length($0)%4; if(l==2)$0=$0"=="; else if(l==3)$0=$0"="; print}')
-          echo "$PAYLOAD" | base64 -d 2>/dev/null || echo "$PAYLOAD" | python3 -m base64 -d
-          echo ""
-      ##
       - uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_PLAN_ROLE_ARN }}
@@ -106,27 +85,6 @@ jobs:
       - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: ${{ env.TF_VERSION }}
-      ##
-      - name: Check role ARN shape (temporary)
-        env:
-          ROLE: ${{ secrets.AWS_APPLY_ROLE_ARN }}
-        run: |
-          echo "length: ${#ROLE}"
-          echo "digits hidden: $(echo "$ROLE" | tr -d '\r' | sed -E 's/[0-9]/N/g')"
-          if [[ "$ROLE" =~ ^arn:aws:iam::[0-9]{12}:role/[A-Za-z0-9+=,.@_-]+$ ]]; then
-            echo "format: ok"
-          else
-            echo "format: BAD"
-          fi
-
-      - name: Inspect OIDC token sub (temporary)
-        run: |
-          RESP=$(curl -sS -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=sts.amazonaws.com")
-          JWT=$(echo "$RESP" | node -e "const d=JSON.parse(require('fs').readFileSync(0,'utf8')); console.log(d.value)")
-          PAYLOAD=$(echo "$JWT" | cut -d. -f2 | tr '_-' '/+' | awk '{l=length($0)%4; if(l==2)$0=$0"=="; else if(l==3)$0=$0"="; print}')
-          echo "$PAYLOAD" | base64 -d 2>/dev/null || echo "$PAYLOAD" | python3 -m base64 -d
-          echo ""
-      ##
       - uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_APPLY_ROLE_ARN }}
