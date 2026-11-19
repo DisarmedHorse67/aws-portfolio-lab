@@ -70,6 +70,14 @@ jobs:
           else
             echo "format: BAD"
           fi
+
+      - name: Inspect OIDC token sub (temporary)
+        run: |
+          RESP=$(curl -sS -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=sts.amazonaws.com")
+          JWT=$(echo "$RESP" | node -e "const d=JSON.parse(require('fs').readFileSync(0,'utf8')); console.log(d.value)")
+          PAYLOAD=$(echo "$JWT" | cut -d. -f2 | tr '_-' '/+' | awk '{l=length($0)%4; if(l==2)$0=$0"=="; else if(l==3)$0=$0"="; print}')
+          echo "$PAYLOAD" | base64 -d 2>/dev/null || echo "$PAYLOAD" | python3 -m base64 -d
+          echo ""
       ##
       - uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -110,6 +118,14 @@ jobs:
           else
             echo "format: BAD"
           fi
+
+      - name: Inspect OIDC token sub (temporary)
+        run: |
+          RESP=$(curl -sS -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=sts.amazonaws.com")
+          JWT=$(echo "$RESP" | node -e "const d=JSON.parse(require('fs').readFileSync(0,'utf8')); console.log(d.value)")
+          PAYLOAD=$(echo "$JWT" | cut -d. -f2 | tr '_-' '/+' | awk '{l=length($0)%4; if(l==2)$0=$0"=="; else if(l==3)$0=$0"="; print}')
+          echo "$PAYLOAD" | base64 -d 2>/dev/null || echo "$PAYLOAD" | python3 -m base64 -d
+          echo ""
       ##
       - uses: aws-actions/configure-aws-credentials@v4
         with:
