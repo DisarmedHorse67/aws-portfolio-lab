@@ -75,3 +75,56 @@ the recover runbook.
   has no account ID, it is safe to commit.
 - Optional: add a lifecycle rule that expires old object versions after a
   number of days, to limit storage.
+
+## Second manual step: apply the foundation layer
+
+Why manual: the pipeline cannot log in until its roles exist, and the
+roles live in the foundation layer, which the pipeline never applies.
+Any change to the pipeline's permissions is applied from the laptop too.
+
+Layer: `infra/foundation` (resources in management, log-archive and
+workload accounts). Last tested: <date>
+
+### Prerequisites
+
+- State bucket exists (first section) and `terraform.tfvars` in
+  `infra/foundation/` has all values (never committed).
+- Signed in to all three profiles: `aws sso login` for `management`,
+  `log-archive` and `workload`.
+
+### Steps
+
+1. `cd infra/foundation`
+2. `terraform init`, then `terraform plan`. Expect only what you changed;
+   stop if anything unexpected appears.
+3. `terraform apply`
+4. `terraform output` shows `plan_role_arn` and `apply_role_arn`.
+
+### Verify
+
+- The OIDC provider is listed, both trust policies name your exact repo
+  with `pull_request` and `refs/heads/main` and contain no `*`, and the
+  apply role has only `ReadOnlyAccess` plus its inline policy (the
+  commands are in the Phase 1 evidence notes).
+
+### Hand the pipeline its roles
+
+1. In the GitHub repository settings, add the secrets `AWS_PLAN_ROLE_ARN`
+   and `AWS_APPLY_ROLE_ARN` from the outputs. Secrets, not variables,
+   because the ARNs contain the account ID.
+2. Set Actions to require approval for workflows from outside
+   contributors.
+
+### Order of work from now on
+
+- Foundation first, from the laptop. Workload second, through a pull
+  request.
+- When a phase needs the pipeline to create a new kind of resource, widen
+  the apply role's policy in foundation, apply it from the laptop, and
+  only then merge the workload change.
+
+### Undo
+
+Destroy only the pipeline roles and the OIDC provider, from the laptop:
+`terraform destroy -target=<resource>` for each. Do not destroy the log
+bucket or the trail this way.
