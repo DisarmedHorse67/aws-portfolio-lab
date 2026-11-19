@@ -1,6 +1,7 @@
 locals {
   github_repo = "${var.github_owner}/${var.github_repository}"
   oidc_host   = "token.actions.githubusercontent.com"
+  github_sub  = "repo:${var.github_owner}@${var.github_owner_id}/${var.github_repository}@${var.github_repository_id}"
 }
 
 resource "aws_iam_openid_connect_provider" "github" {
@@ -26,7 +27,7 @@ data "aws_iam_policy_document" "plan_trust" {
     condition {
       test     = "StringEquals"
       variable = "${local.oidc_host}:sub"
-      values   = ["repo:${local.github_repo}:pull_request"]
+      values   = ["${local.github_sub}:pull_request"]
     }
   }
 }
@@ -48,7 +49,7 @@ data "aws_iam_policy_document" "apply_trust" {
     condition {
       test     = "StringEquals"
       variable = "${local.oidc_host}:sub"
-      values   = ["repo:${local.github_repo}:ref:refs/heads/main"]
+      values   = ["${local.github_sub}:ref:refs/heads/main"]
     }
   }
 }
