@@ -24,9 +24,9 @@ data "aws_iam_policy_document" "plan_trust" {
       values   = ["sts.amazonaws.com"]
     }
     condition {
-      test     = "StringEquals"
+      test     = "StringLike"
       variable = "${local.oidc_host}:sub"
-      values   = ["repo:${local.github_repo}:pull_request"]
+      values   = ["repo:${local.github_repo}@*:pull_request"]
     }
   }
 }
@@ -46,9 +46,9 @@ data "aws_iam_policy_document" "apply_trust" {
       values   = ["sts.amazonaws.com"]
     }
     condition {
-      test     = "StringEquals"
+      test     = "StringLike"
       variable = "${local.oidc_host}:sub"
-      values   = ["repo:${local.github_repo}:ref:refs/heads/main"]
+      values   = ["repo:${local.github_repo}@*:ref:refs/heads/main"]
     }
   }
 }
