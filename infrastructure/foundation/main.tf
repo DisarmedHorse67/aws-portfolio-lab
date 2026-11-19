@@ -90,13 +90,13 @@ resource "aws_s3_bucket_policy" "log_archive_bucket_policy" {
           }
         }
       },
-    {
+      {
         Sid       = "DenyObjectDeletes"
         Effect    = "Deny"
         Principal = "*"
         Action    = ["s3:DeleteObject", "s3:DeleteObjectVersion"]
         Resource  = "${aws_s3_bucket.log_archive_bucket.arn}/*"
-    },
+      },
       {
         Sid       = "DenyBucketDeletion"
         Effect    = "Deny"
@@ -157,7 +157,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "log_archive_bucket" {
 resource "aws_cloudtrail" "organization_trail" {
   provider                      = aws.management
   name                          = "dcc-portfolio-trail"
-  s3_bucket_name                = "dcc-logs-s3-log-archive-portfolio-041026" 
+  s3_bucket_name                = "dcc-logs-s3-log-archive-portfolio-041026"
   is_organization_trail         = true
   include_global_service_events = true
   enable_log_file_validation    = true
