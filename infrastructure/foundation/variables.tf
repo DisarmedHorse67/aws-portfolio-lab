@@ -32,3 +32,13 @@ variable "state_bucket_name" {
   type        = string
   description = "Name of the Terraform state bucket"
 }
+
+variable "github_owner_id" {
+  type        = string
+  description = "Numeric ID of the GitHub owner"
+}
+
+variable "github_repository_id" {
+  type        = string
+  description = "Numeric ID of the GitHub repository"
+}
