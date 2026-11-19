@@ -9,28 +9,28 @@ resource "aws_organizations_policy" "security_guardrails" {
     Version = "2012-10-17"
     Statement = [
       {
-        Sid       = "DenyLeavingOrganization"
-        Effect    = "Deny"
-        Action    = [
+        Sid    = "DenyLeavingOrganization"
+        Effect = "Deny"
+        Action = [
           "organizations:LeaveOrganization"
         ]
-        Resource  = "*"
+        Resource = "*"
       },
       {
-        Sid       = "DenyCloudTrailAndGuardDutyTampering"
-        Effect    = "Deny"
-        Action    = [
+        Sid    = "DenyCloudTrailAndGuardDutyTampering"
+        Effect = "Deny"
+        Action = [
           "cloudtrail:StopLogging",
           "cloudtrail:DeleteTrail",
           "cloudtrail:UpdateTrail",
           "guardduty:DeleteDetector",
           "guardduty:DisassociateFromMasterAccount"
         ]
-        Resource  = "*"
+        Resource = "*"
       },
       {
-        Sid       = "DenyUnauthorizedRegions"
-        Effect    = "Deny"
+        Sid    = "DenyUnauthorizedRegions"
+        Effect = "Deny"
         NotAction = [
           "cloudfront:*",
           "iam:*",
@@ -38,7 +38,7 @@ resource "aws_organizations_policy" "security_guardrails" {
           "support:*",
           "sts:*"
         ]
-        Resource  = "*"
+        Resource = "*"
         Condition = {
           StringNotEquals = {
             "aws:RequestedRegion" = [
@@ -62,9 +62,9 @@ resource "aws_organizations_policy" "deny_root_user" {
     Version = "2012-10-17"
     Statement = [
       {
-        Sid       = "DenyRootUserActions"
-        Effect    = "Deny"
-        Action    = [
+        Sid    = "DenyRootUserActions"
+        Effect = "Deny"
+        Action = [
           "iam:CreateUser",
           "iam:CreateAccessKey",
           "iam:CreateLoginProfile",
@@ -72,7 +72,7 @@ resource "aws_organizations_policy" "deny_root_user" {
           "organizations:RemoveAccountFromOrganization",
           "billing:*"
         ]
-        Resource  = "*"
+        Resource = "*"
         Condition = {
           StringLike = {
             "aws:PrincipalArn" = "arn:aws:iam::*:root"
@@ -80,24 +80,24 @@ resource "aws_organizations_policy" "deny_root_user" {
         }
       },
       {
-        "Sid": "DenySecurityServiceTampering",
-        "Effect": "Deny",
-        "Action": [
+        "Sid" : "DenySecurityServiceTampering",
+        "Effect" : "Deny",
+        "Action" : [
           "guardduty:StopDataSource",
           "guardduty:DeleteDetector",
           "securityhub:DisableSecurityHub",
           "config:DeleteConfigurationRecorder",
           "config:StopConfigurationRecorder"
         ],
-        "Resource": "*"
+        "Resource" : "*"
       },
       {
-        "Sid": "DenyUnmanagedInternetGateways",
-        "Effect": "Deny",
-        "Action": [
+        "Sid" : "DenyUnmanagedInternetGateways",
+        "Effect" : "Deny",
+        "Action" : [
           "ec2:CreateInternetGateway"
         ],
-        "Resource": "*"
+        "Resource" : "*"
       }
     ]
   })
