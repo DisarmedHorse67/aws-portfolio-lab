@@ -51,7 +51,7 @@ jobs:
       id-token: write
     defaults:
       run:
-        working-directory: infra/workload
+        working-directory: infrastructure/workload
     steps:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v3
