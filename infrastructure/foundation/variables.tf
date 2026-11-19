@@ -17,3 +17,18 @@ variable "workload_account_id" {
   type        = string
   description = "ID of the account that will be used for workloads"
 }
+
+variable "github_owner" {
+  type        = string
+  description = "GitHub user or organization that owns the repo"
+}
+
+variable "github_repository" {
+  type    = string
+  default = "aws-portfolio-lab"
+}
+
+variable "state_bucket_name" {
+  type        = string
+  description = "Name of the Terraform state bucket"
+}
