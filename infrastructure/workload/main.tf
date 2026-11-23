@@ -5,5 +5,4 @@ resource "aws_s3_account_public_access_block" "workload" {
   restrict_public_buckets = true
 }
 
-#This comment is a test for the new GitHub Actions workflow to see if it works with the new working-directory
-#Test 2
+#Test 3 for OIDC
