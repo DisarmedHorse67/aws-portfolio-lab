@@ -5,4 +5,4 @@ resource "aws_s3_account_public_access_block" "workload" {
   restrict_public_buckets = true
 }
 
-#Test 3 for OIDC
+#Test Main branch protection
