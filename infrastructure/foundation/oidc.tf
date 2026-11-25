@@ -90,13 +90,13 @@ data "aws_iam_policy_document" "apply_permissions" {
 
 resource "aws_iam_role" "plan" {
   provider           = aws.workload
-  name               = "github-actions-plan"
+  name               = "dcc-workload-Plan-Role-Portfolio-041026"
   assume_role_policy = data.aws_iam_policy_document.plan_trust.json
 }
 
 resource "aws_iam_role" "apply" {
   provider           = aws.workload
-  name               = "github-actions-apply"
+  name               = "dcc-workload-Apply-Role-Portfolio-041026"
   assume_role_policy = data.aws_iam_policy_document.apply_trust.json
 }
 
@@ -114,14 +114,14 @@ resource "aws_iam_role_policy_attachment" "apply_readonly" {
 
 resource "aws_iam_role_policy" "plan_state" {
   provider = aws.workload
-  name     = "state-access"
+  name     = "dcc-workload-Plan-Policy-Role-Portfolio-041026"
   role     = aws_iam_role.plan.id
   policy   = data.aws_iam_policy_document.plan_state.json
 }
 
 resource "aws_iam_role_policy" "apply_permissions" {
   provider = aws.workload
-  name     = "apply-permissions"
+  name     = "dcc-workload-Apply-Policy-Role-Portfolio-041026"
   role     = aws_iam_role.apply.id
   policy   = data.aws_iam_policy_document.apply_permissions.json
 }
