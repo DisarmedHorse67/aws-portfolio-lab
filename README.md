@@ -20,8 +20,6 @@ Status: work in progress. Live site: coming in Phase 2.
 
 ## Target architecture
 
-## Target architecture
-
 ```mermaid
 flowchart TB
   subgraph Product["Product: the public site"]
