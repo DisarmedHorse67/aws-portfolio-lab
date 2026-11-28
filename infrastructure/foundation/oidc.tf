@@ -86,6 +86,18 @@ data "aws_iam_policy_document" "apply_permissions" {
     actions   = ["s3:PutAccountPublicAccessBlock"]
     resources = ["*"]
   }
+  statement {
+    actions   = ["route53:CreateHostedZone"]
+    resources = ["*"]
+  }
+  statement {
+    actions = [
+      "route53:ChangeTagsForResource",
+      "route53:ChangeResourceRecordSets",
+      "route53:UpdateHostedZoneComment"
+    ]
+    resources = ["arn:aws:route53:::hostedzone/*"]
+  }
 }
 
 resource "aws_iam_role" "plan" {
